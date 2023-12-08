@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import Enum
-from typing import Annotated
+from typing import Annotated, List
 from fastapi import APIRouter, Depends, Path, HTTPException
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
@@ -37,9 +37,18 @@ class TodoRequest(BaseModel):
     prioridad: PrioridadEnum
     completada: bool
 
+class TodoResponse(BaseModel):
+    id: int
+    titulo: str
+    descripcion: str
+    fecha_finalizacion: datetime
+    prioridad: PrioridadEnum
+    completada: bool
+
+
 
 @router.get("/", status_code=status.HTTP_200_OK)
-async def listado(db: db_dependency):
+async def listado(db: db_dependency) -> List[TodoResponse]:
     return db.query(Todos).all()
 
 
